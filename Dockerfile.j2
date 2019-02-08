@@ -4,15 +4,55 @@ RUN yum install -y  gcc gcc-c++ make git patch openssl-devel zlib-devel readline
 
 RUN git clone git://github.com/yyuu/pyenv.git /pyenv
 
+ARG python_version=3.6.5
+
 RUN echo 'export PYENV_ROOT=/pyenv; export PATH="/pyenv/bin:$PATH"' >> /etc/pyenvrc && \
     echo 'eval "$(pyenv init -)"' >> /etc/pyenvrc
 
-RUN source /etc/pyenvrc && which pyenv && pyenv install 2.7.15 && pyenv versions
-RUN source /etc/pyenvrc && pyenv shell 2.7.15 && pyenv global 2.7.15 && pyenv versions && pyenv rehash
+RUN source /etc/pyenvrc && which pyenv && PYTHON_CONFIGURE_OPTS="--enable-shared"  CFLAGS="-fPIC" CXXFLAGS="-fPIC" pyenv install $python_version && pyenv versions
+RUN source /etc/pyenvrc && pyenv shell $python_version && pyenv global $python_version && pyenv versions && pyenv rehash
 
 RUN echo 'source /etc/pyenvrc' >> /init.sh
 
-RUN source /init.sh && \
-    pip install numpy scipy ipython jupyter && \
+RUN yum install -y wcslib-devel swig
+
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    git clone https://github.com/volodymyrss/heasoft-heasp.git /heasoft-heasp && \
+#    cd /heasoft-heasp/python && \
+#    swig -python -c++ -classic heasp.i && \
+#    hmake install && \
+#    cd /heasoft-heasp && \
+#    hmake install
+
+#RUN rsync -avu /osa-deployment/CentOS_7.5.1804_x86_64/heasoft/ /opt/heasoft/
+
+#RUN ls -lotr /opt/heasoft/x86_64-pc-linux-gnu-libc2.17/lib/python/xspec/chain.py
+
+RUN yum install -y libyaml-devel 
+
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    python -c 'import xspec; print(xspec.__file__)' && \
+    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
+
+
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install git+https://github.com/threeML/astromodels.git && \
     pip install git+https://github.com/threeML/threeML.git && \
     pip install git+https://github.com/threeML/astromodels.git
+
+
+
+RUN git clone https://github.com/threeML/astromodels.git
+
+
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    ls -lotr && \
+    cd /astromodels/ && python setup.py install && pip install .
+
+
+ADD Xspec /dist/Xspec
+ADD heacore /dist/heacore

@@ -39,8 +39,9 @@ docker run \
     -v $REP_BASE_PROD/aux:/data/aux:ro \
     -v $CURRENT_IC/ic:/data/ic:ro \
     -v $CURRENT_IC/idx:/data/idx:ro \
+    -v /mnt:/mnt \
     -p 8900:8888 \
-    --rm -it  --user $(id -u) \
+    --rm -it  --user ${USER:-$(id -u)} \
         ${OSA_DOCKER_IMAGE} bash -c "
 
 . init.sh

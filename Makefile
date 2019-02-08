@@ -14,12 +14,12 @@ push: build
 	docker push $(IMAGE_LATEST) 
 
 build: Dockerfile
-	docker build  . -t $(IMAGE) 
-	docker build  . -t $(IMAGE_LATEST) 
+	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=2.7.15 . -t $(IMAGE) 
+	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=2.7.15 . -t $(IMAGE_LATEST) 
 
 pull:
 	docker pull $(IMAGE) 
 	docker pull $(IMAGE_LATEST) 
 
-Dockerfile: Dockerfile.j2
-	j2 -e 'OSA_VERSION="$(OSA_IMAGE_TAG)"' Dockerfile.j2 -d -o Dockerfile
+#Dockerfile: Dockerfile.j2
+#	j2 -e 'OSA_VERSION="$(OSA_IMAGE_TAG)"' Dockerfile.j2 -d -o Dockerfile
