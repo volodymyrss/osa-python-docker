@@ -1,8 +1,10 @@
 OSA_VERSION?=$(shell curl https://www.isdc.unige.ch/~savchenk/gitlab-ci/integral/build/osa-build-tarball/CentOS_7.5.1804_x86_64/latest/latest/osa-version-ref.txt)
 ISDC_REF_CAT_VERSION?=42.0
+PYTHON_VERSION=2.7.15
+HEASOFT_VERSION=6.22
 
 OSA_IMAGE_TAG=${OSA_VERSION}-refcat-${ISDC_REF_CAT_VERSION}
-IMAGE_TAG=${OSA_VERSION}-refcat-${ISDC_REF_CAT_VERSION}
+IMAGE_TAG=${OSA_VERSION}-refcat-${ISDC_REF_CAT_VERSION}-heasoft-$(HEASOFT_VERSION)-python-$(PYTHON_VERSION)
 
 IMAGE_BASE?=integralsw/osa-python27
 
@@ -14,8 +16,8 @@ push: build
 	docker push $(IMAGE_LATEST) 
 
 build: Dockerfile
-	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=2.7.15 . -t $(IMAGE) 
-	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=2.7.15 . -t $(IMAGE_LATEST) 
+	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=$(PYTHON_VERSION) --build-arg heasoft_version=$(HEASOFT_VERSION) . -t $(IMAGE) 
+	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=$(PYTHON_VERSION) --build-arg heasoft_version=$(HEASOFT_VERSION) . -t $(IMAGE_LATEST) 
 
 pull:
 	docker pull $(IMAGE) 

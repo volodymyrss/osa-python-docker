@@ -58,6 +58,7 @@ function build {
     cd $build_dir
 
     tar zvxf $gzFile_fullpath
+    rm -fv $gzFile_fullpath
 
     cd heasoft-${heasoft_version}/BUILD_DIR
 

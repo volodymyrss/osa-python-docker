@@ -87,14 +87,15 @@ RUN echo 'source /etc/pyenvrc' >> /init.sh
 
 RUN yum install -y wcslib-devel swig
 
-ARG heasoft_version=6.20
+ARG heasoft_version=6.21
 
-COPY heasoft-${heasoft_version}src_no_xspec_modeldata.tar.gz /heasoft-${heasoft_version}src_no_xspec_modeldata.tar.gz
+#COPY heasoft-${heasoft_version}src_no_xspec_modeldata.tar.gz /heasoft-${heasoft_version}src_no_xspec_modeldata.tar.gz
 
 ADD build-heasoft.sh /build-heasoft.sh
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     rm -rf /opt/heasoft && \
+    bash build-heasoft.sh download && \
     bash build-heasoft.sh build
     
 
@@ -114,7 +115,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 
 RUN yum install -y libyaml-devel 
 
-RUN echo 'export HEADAS=/opt/heasoft/x86_64-unknown-linux-gnu-libc2.17/; source $HEADAS/headas-init.sh' >> /init.sh
+RUN echo '[ -s /opt/heasoft/x86_64-unknown-linux-gnu-libc2.17/headas-init.sh ] && { export HEADAS=/opt/heasoft/x86_64-unknown-linux-gnu-libc2.17/; source $HEADAS/headas-init.sh; }' >> /init.sh
 
 #ADD Xspec /dist/Xspec
 #ADD heacore /dist/heacore
@@ -133,11 +134,11 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
 
 
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    pip install git+https://github.com/threeML/astromodels.git && \
-#    pip install git+https://github.com/threeML/threeML.git && \
-#    pip install git+https://github.com/threeML/astromodels.git
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install git+https://github.com/threeML/astromodels.git && \
+    pip install git+https://github.com/threeML/threeML.git && \
+    pip install git+https://github.com/threeML/astromodels.git
 
 #RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 #    source /init.sh && \
@@ -145,14 +146,12 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 
 
 
-RUN git clone https://github.com/threeML/astromodels.git
+#RUN git clone https://github.com/threeML/astromodels.git
 
-
-
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    ls -lotr && \
-    cd /astromodels/ && python setup.py install && pip install .
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    ls -lotr && \
+#    cd /astromodels/ && python setup.py install && pip install .
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
