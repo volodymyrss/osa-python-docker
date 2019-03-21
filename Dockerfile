@@ -153,7 +153,20 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 #    ls -lotr && \
 #    cd /astromodels/ && python setup.py install && pip install .
 
+RUN cat /init.sh | awk 'BEGIN {print "HOME_OVERRRIDE=/tmp/home"} 1' > /init-t.sh && mv /init-t.sh /init.sh
+
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     python -c 'import astromodels.xspec; print(astromodels.xspec.__file__)' 
 
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/master/requirements.txt && \
+    pip install git+https://github.com/volodymyrss/data-analysis@stable && \
+    pip install git+https://github.com/volodymyrss/pilton && \
+    pip install git+https://github.com/volodymyrss/dda-ddosa
+
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install git+https://github.com/volodymyrss/dqueue.git
