@@ -23,10 +23,10 @@ RUN ln -s /usr/lib64/libpcre.so.1 /usr/lib64/libpcre.so.0
 
 # root
 
-#RUN cd /opt && \
-#    wget https://root.cern.ch/download/root_v5.34.26.Linux-slc6_amd64-gcc4.4.tar.gz && \
-#    tar xvzf root_v5.34.26.Linux-slc6_amd64-gcc4.4.tar.gz && \
-#    rm -f root_v5.34.26.Linux-slc6_amd64-gcc4.4.tar.gz 
+RUN cd /opt && \
+    wget https://root.cern.ch/download/root_v5.34.26.Linux-slc6_amd64-gcc4.4.tar.gz && \
+    tar xvzf root_v5.34.26.Linux-slc6_amd64-gcc4.4.tar.gz && \
+    rm -f root_v5.34.26.Linux-slc6_amd64-gcc4.4.tar.gz 
 
 # heasoft
 
@@ -128,17 +128,18 @@ RUN echo '[ -s /opt/heasoft/x86_64-unknown-linux-gnu-libc2.17/headas-init.sh ] &
 #    source /init.sh && \
 #    bash  /install-xspec.sh
 
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    python -c 'import xspec; print(xspec.__file__)' && \
-    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
+## !
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    python -c 'import xspec; print(xspec.__file__)' && \
+#    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
 
 
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    pip install git+https://github.com/threeML/astromodels.git && \
-    pip install git+https://github.com/threeML/threeML.git && \
-    pip install git+https://github.com/threeML/astromodels.git
+# RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    pip install git+https://github.com/threeML/astromodels.git && \
+#    pip install git+https://github.com/threeML/threeML.git && \
+#    pip install git+https://github.com/threeML/astromodels.git
 
 #RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 #    source /init.sh && \
@@ -155,14 +156,14 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 
 RUN cat /init.sh | awk 'BEGIN {print "HOME_OVERRRIDE=/tmp/home"} 1' > /init-t.sh && mv /init-t.sh /init.sh
 
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    python -c 'import astromodels.xspec; print(astromodels.xspec.__file__)' 
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    python -c 'import astromodels.xspec; print(astromodels.xspec.__file__)' 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/master/requirements.txt && \
-    pip install git+https://github.com/volodymyrss/data-analysis@stable && \
+    pip install git+https://github.com/volodymyrss/data-analysis@py3 && \
     pip install git+https://github.com/volodymyrss/pilton && \
     pip install git+https://github.com/volodymyrss/dda-ddosa
 
@@ -170,3 +171,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     pip install git+https://github.com/volodymyrss/dqueue.git
+
+
+#RUN yum install rsync -y
+#RUN mkdir -pv /data/ic; rsync -Lzrtv isdcarc.unige.ch::arc/FTP/arc_distr/ic_tree/prod/  /data/ic/

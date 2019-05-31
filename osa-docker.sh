@@ -23,9 +23,9 @@ echo "CURRENT_IC: ${CURRENT_IC:=$REP_BASE_PROD}"
 echo "using WORKDIR: ${WORKDIR:=$PWD}"
 
 
-for directory in "$REP_BASE_PROD/scw" "$REP_BASE_PROD/aux" "$CURRENT_IC/ic" "$CURRENT_IC/idx" "$WORKDIR"; do
-    [ -d $directory ] || { echo "directory \"$directory\" should exist"; exit 1; }
-done
+#for directory in "$REP_BASE_PROD/scw" "$REP_BASE_PROD/aux" "$CURRENT_IC/ic" "$CURRENT_IC/idx" "$WORKDIR"; do
+#    [ -d $directory ] || { echo "directory \"$directory\" should exist"; exit 1; }
+#done
 
 [ -s /tmp/.X11-unix ] || { echo "no /tmp/.X11-unix? no X? not allowed!"; }
 
@@ -35,14 +35,16 @@ docker run \
     -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $WORKDIR:/home/integral \
+    -v /mnt:/mnt \
     -v $REP_BASE_PROD/scw:/data/scw:ro \
     -v $REP_BASE_PROD/aux:/data/aux:ro \
     -v $CURRENT_IC/ic:/data/ic:ro \
     -v $CURRENT_IC/idx:/data/idx:ro \
-    -v /mnt:/mnt \
     -p 8900:8888 \
     --rm -it  --user ${USER:-$(id -u)} \
         ${OSA_DOCKER_IMAGE} bash -c "
+
+export HOME_OVERRIDE=/home/integral
 
 . init.sh
 
