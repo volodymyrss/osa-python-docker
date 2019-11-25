@@ -157,3 +157,5 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     pip install git+https://github.com/volodymyrss/dqueue.git
 
+
+ADD activate.sh /activate.sh
