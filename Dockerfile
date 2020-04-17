@@ -40,7 +40,8 @@ RUN cd /opt && \
 
 # OSA 
 
-ARG OSA_VERSION
+ARG OSA_VERSION=11.1-3-g87cee807-20200410-144247 
+ARG OSA_PLATFORM=CentOS_7.7.1908_x86_64
 
 RUN cd /opt/ && \
     if [ ${OSA_VERSION} == "10.2" ]; then \
@@ -49,28 +50,27 @@ RUN cd /opt/ && \
         rm -fv osa10.2-bin-linux64.tar.gz && \
         mv osa10.2 osa; \
     else \
-        wget https://www.isdc.unige.ch/~savchenk/gitlab-ci/integral/build/osa-build-binary-tarball/CentOS_7.5.1804_x86_64/${OSA_VERSION}/build-latest/osa-${OSA_VERSION}-CentOS_7.5.1804_x86_64.tar.gz && \
-        tar xvzf osa-${OSA_VERSION}-CentOS_7.5.1804_x86_64.tar.gz && \
-        rm -fv osa-${OSA_VERSION}-CentOS_7.5.1804_x86_64.tar.gz && \
+        wget https://www.isdc.unige.ch/~savchenk/gitlab-ci/integral/build/osa-build-binary-tarball/${OSA_PLATFORM}/${OSA_VERSION}/build-latest/osa-${OSA_VERSION}-${OSA_PLATFORM}.tar.gz && \
+        tar xvzf osa-${OSA_VERSION}-*.tar.gz && \
+        rm -fv osa-${OSA_VERSION}-*.tar.gz && \
         mv osa11 osa; \
     fi 
 
-#ARG isdc_ref_cat_version=42.0
+ARG isdc_ref_cat_version=42.0
 
-#RUN wget https://www.isdc.unige.ch/integral/download/osa/cat/osa_cat-${isdc_ref_cat_version}.tar.gz && \
-#    tar xvzf osa_cat-${isdc_ref_cat_version}.tar.gz && \
-#    mkdir -pv /data/ && \
-#    mv osa_cat-${isdc_ref_cat_version}/cat /data/ && \
-#    rm -rf osa_cat-${isdc_ref_cat_version}
+RUN wget https://www.isdc.unige.ch/integral/download/osa/cat/osa_cat-${isdc_ref_cat_version}.tar.gz && \
+    tar xvzf osa_cat-${isdc_ref_cat_version}.tar.gz && \
+    mkdir -pv /data/ && \
+    mv osa_cat-${isdc_ref_cat_version}/cat /data/ && \
+    rm -rf osa_cat-${isdc_ref_cat_version}
 
-#RUN wget http://ds9.si.edu/download/centos7/ds9.centos7.8.0.1.tar.gz && \
-#    tar xvfz ds9.centos7.8.0.1.tar.gz && \
-#    chmod a+x ds9 && \
-#    mv ds9 /usr/local/bin && \
-#    rm -f ds9.centos7.8.0.1.tar.gz
+RUN wget http://ds9.si.edu/download/centos7/ds9.centos7.8.0.1.tar.gz && \
+    tar xvfz ds9.centos7.8.0.1.tar.gz && \
+    chmod a+x ds9 && \
+    mv ds9 /usr/local/bin && \
+    rm -f ds9.centos7.8.0.1.tar.gz
 
 ADD init.sh /init.sh
-
 
 
 
@@ -120,29 +120,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
 
 
-# RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    pip install git+https://github.com/threeML/astromodels.git && \
-#    pip install git+https://github.com/threeML/threeML.git && \
-#    pip install git+https://github.com/threeML/astromodels.git
-
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    python -c 'import astromodels; print(astromodels.__file__)' 
-
-#RUN git clone https://github.com/threeML/astromodels.git
-
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    ls -lotr && \
-#    cd /astromodels/ && python setup.py install && pip install .
-
-
 #RUN cat /init.sh | awk 'BEGIN {print "HOME_OVERRRIDE=/tmp/home"} 1' > /init-t.sh && mv /init-t.sh /init.sh
-
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    python -c 'import astromodels.xspec; print(astromodels.xspec.__file__)' 
 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
@@ -159,3 +137,18 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 
 
 ADD activate.sh /activate.sh
+
+
+# 3ml
+
+RUN git clone https://github.com/threeML/astromodels.git && \
+    export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    ls -lotr && \
+    cd /astromodels/ && python setup.py install && pip install .
+
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    python -c 'import astromodels; print(astromodels.__file__)' 
+
+

@@ -1,7 +1,7 @@
-OSA_VERSION?=$(shell curl https://www.isdc.unige.ch/~savchenk/gitlab-ci/integral/build/osa-build-tarball/CentOS_7.5.1804_x86_64/latest/latest/osa-version-ref.txt)
+OSA_PLATFORM?=CentOS_7.7.1908_x86_64
+OSA_VERSION?=$(shell curl https://www.isdc.unige.ch/~savchenk/gitlab-ci/integral/build/osa-build-tarball/$(OSA_PLATFORM)/latest/latest/osa-version-ref.txt)
 ISDC_REF_CAT_VERSION?=42.0
 PYTHON_VERSION=3.6.9
-#PYTHON_VERSION=3.7.4
 HEASOFT_VERSION=6.26.1
 
 OSA_IMAGE_TAG=${OSA_VERSION}-refcat-${ISDC_REF_CAT_VERSION}
