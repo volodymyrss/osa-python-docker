@@ -110,8 +110,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     hmake install
 
 
-#RUN echo '[ -s /opt/heasoft/x86_64-unknown-linux-gnu-libc2.17/headas-init.sh ] && { export HEADAS=/opt/heasoft/x86_64-unknown-linux-gnu-libc2.17/; source $HEADAS/headas-init.sh; }' >> /init.sh
-RUN echo '[ -s /opt/heasoft/x86_64-pc-linux-gnu-libc2.17/headas-init.sh ] && { export HEADAS=/opt/heasoft/x86_64-pc-linux-gnu-libc2.17/; source $HEADAS/headas-init.sh; }' >> /init.sh
+RUN p=$(ls -d /opt/heasoft/x86*/); echo "found HEADAS: $p"; echo 'export HEADAS="'$p'"; source $HEADAS/headas-init.sh' >> /init.sh
 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
