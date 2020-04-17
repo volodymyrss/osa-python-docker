@@ -26,3 +26,6 @@ pull:
 
 #Dockerfile: Dockerfile.j2
 #	j2 -e 'OSA_VERSION="$(OSA_IMAGE_TAG)"' Dockerfile.j2 -d -o Dockerfile
+
+jupyter: build
+	docker run --user $(id -u) $(IMAGE) bash -c 'export HOME_OVERRRIDE=/tmp; source /init.sh; jupyter notebook --ip 0.0.0.0 --no-browser'
