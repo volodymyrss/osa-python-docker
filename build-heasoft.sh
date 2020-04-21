@@ -44,7 +44,7 @@ function download {
 #    if [ ! -f $gzFile_fullpath ]; then
         echo "Downloading $url..."
         #curl $url > $gzFile_fullpath
-        wget -c $url -O $gzFile_fullpath
+        wget -q -c $url -O $gzFile_fullpath
 #    fi
 
     if [ ! -f $gzFile_fullpath ]; then
@@ -57,7 +57,7 @@ function download {
 function build {
     cd $build_dir
 
-    tar zvxf $gzFile_fullpath
+    tar zxf $gzFile_fullpath
     rm -fv $gzFile_fullpath
 
     cd heasoft-${heasoft_version}/BUILD_DIR
@@ -85,7 +85,7 @@ function build {
     export LDFLAGS="-fPIC"
 
     echo "Configuring... (message saved in log_configure)"
-    ./configure --prefix=${install_prefix} 
+    ./configure --prefix=${install_prefix}  > /dev/null 2>&1
 
 
 ## centos5 does not compile otherwise, weird
@@ -98,14 +98,15 @@ function build {
     export LDFLAGS="-fPIC"
 
     echo "Executing make..."
-    make #>> $logfile 2>&1
+    make > /dev/null 2>&1
 
     echo "Executing make install..."
-    make install #>> $logfile 2>&1
+    make install > /dev/null 2>&1
 
     cd $HOME
 
-    rm -rfv heasoft-${heasoft_version}/ 
+    echo "Cleaning up.."
+    rm -rf heasoft-${heasoft_version}/ 
     rm -fv *gz
 
     find $install_prefix/heasoft -size +5M | grep ref | xargs rm -fv
