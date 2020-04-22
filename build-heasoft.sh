@@ -61,7 +61,7 @@ export LDFLAGS="-fPIC"
 
 echo "Configuring... (message saved in log_configure)"
 date
-./configure --prefix=${install_prefix}  #> /dev/null 2>&1
+./configure --prefix=${install_prefix}  > /dev/null 2>&1
 date
 
 
@@ -76,12 +76,12 @@ export LDFLAGS="-fPIC"
 
 echo "Executing make..."
 date
-make #> /dev/null 2>&1
+make > /dev/null 2>&1
 date
 
 echo "Executing make install..."
 date
-make install #> /dev/null 2>&1
+make install > /dev/null 2>&1
 date
 
 cd $HOME
