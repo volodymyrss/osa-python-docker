@@ -60,7 +60,7 @@ ADD init.sh /init.sh
 
 RUN git clone git://github.com/yyuu/pyenv.git /pyenv
 
-ARG python_version=3.6.5
+ARG python_version=3.8.2
 
 RUN echo 'export PYENV_ROOT=/pyenv; export PATH="/pyenv/bin:$PATH"' >> /etc/pyenvrc && \
     echo 'eval "$(pyenv init -)"' >> /etc/pyenvrc
@@ -72,7 +72,7 @@ RUN echo 'source /etc/pyenvrc' >> /init.sh
 
 RUN yum install -y wcslib-devel swig
 
-ARG heasoft_version=6.21
+ARG heasoft_version=6.27.1
 
 ADD build-heasoft.sh /build-heasoft.sh
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
