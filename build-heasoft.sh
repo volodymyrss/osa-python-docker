@@ -63,6 +63,7 @@ function build {
     cd heasoft-${heasoft_version}/BUILD_DIR
 
     export platform=`cat /etc/platform`
+    echo "detected platform: ${platform:=CentOS_7}" # this is specific for unige CI build
 
     if echo "$platform" | grep CentOS_5 ; then
         export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
@@ -85,7 +86,9 @@ function build {
     export LDFLAGS="-fPIC"
 
     echo "Configuring... (message saved in log_configure)"
+    date
     ./configure --prefix=${install_prefix}  > /dev/null 2>&1
+    date
 
 
 ## centos5 does not compile otherwise, weird
@@ -98,10 +101,14 @@ function build {
     export LDFLAGS="-fPIC"
 
     echo "Executing make..."
+    date
     make > /dev/null 2>&1
+    date
 
     echo "Executing make install..."
+    date
     make install > /dev/null 2>&1
+    date
 
     cd $HOME
 
