@@ -11,12 +11,15 @@ RUN yum -y install gcc gcc-c++ gcc-gfortran \
                    ncurses-devel \
                    libXt-devel libX11-devel libXpm-devel libXft-devel libXext-devel \
                    cmake openssl-devel pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel \
-                   mysql-devel fftw-devel cfitsio-devel graphviz-devel avahi-compat-libdns_sd-devel libldap-dev python-devel libxml2-devel gsl-static \
+                   mysql-devel fftw-devel cfitsio-devel graphviz-devel avahi-compat-libdns_sd-devel libldap-dev python-devel libxml2-devel gsl-static gsl-devel\
                    compat-gcc-44 compat-gcc-44-c++ compat-gcc-44-c++.gfortran \
                    perl-ExtUtils-MakeMaker \
                    net-tools strace sshfs sudo iptables \
                    libyaml-devel  \
                    gcc gcc-c++ make git patch openssl-devel zlib-devel readline-devel sqlite-devel bzip2-devel libffi-devel zlib python36u-tkinter.x86_64 
+
+RUN yum install -y centos-release-scl
+RUN yum install -y devtoolset-7*
 
 RUN ln -s /usr/lib64/libpcre.so.1 /usr/lib64/libpcre.so.0
 
@@ -75,11 +78,15 @@ RUN yum install -y wcslib-devel swig
 ARG heasoft_version=6.27.1
 
 ADD build-heasoft.sh /build-heasoft.sh
+
+RUN echo '. /opt/rh/devtoolset-7/enable' >> /init.sh
+    
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     rm -rf /opt/heasoft && \
     bash build-heasoft.sh download && \
     bash build-heasoft.sh build
+    
     
 RUN p=$(ls -d /opt/heasoft/x86*/); echo "found HEADAS: $p"; echo 'export HEADAS="'$p'"; source $HEADAS/headas-init.sh' >> /init.sh
 
@@ -101,12 +108,10 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
 
 
-#RUN cat /init.sh | awk 'BEGIN {print "HOME_OVERRRIDE=/tmp/home"} 1' > /init-t.sh && mv /init-t.sh /init.sh
-
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
-    pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/master/requirements.txt && \
+    pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/py3/requirements.txt && \
     pip install git+https://github.com/volodymyrss/data-analysis@py3 && \
     pip install git+https://github.com/volodymyrss/pilton && \
     pip install git+https://github.com/volodymyrss/dda-ddosa
