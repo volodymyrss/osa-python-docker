@@ -147,3 +147,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     pip install pymysql peewee
 
 ADD tests /tests
+
+RUN source /init.sh; pip install jupyterlab
+
+ENTRYPOINT 'export HOME_OVERRRIDE=/home/jovyan; cd /home/jovyan; source /init.sh; jupyter lab --ip 0.0.0.0 --no-browser'
