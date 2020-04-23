@@ -30,16 +30,16 @@ ARG OSA_PLATFORM=CentOS_7.7.1908_x86_64
 
 RUN cd /opt/ && \
     if [ ${OSA_VERSION} == "10.2" ]; then \
-        wget -q https://www.isdc.unige.ch/integral/download/osa/sw/10.2/osa10.2-bin-linux64.tar.gz && \
-        tar xzf osa10.2-bin-linux64.tar.gz && \
-        rm -fv osa10.2-bin-linux64.tar.gz && \
-        mv osa10.2 osa; \
+        echo "with OSA11, we will always install OSA10.2 for compatibility"; \
     else \
         wget -q https://www.isdc.unige.ch/~savchenk/gitlab-ci/integral/build/osa-build-binary-tarball/${OSA_PLATFORM}/${OSA_VERSION}/build-latest/osa-${OSA_VERSION}-${OSA_PLATFORM}.tar.gz && \
         tar xzf osa-${OSA_VERSION}-*.tar.gz && \
         rm -fv osa-${OSA_VERSION}-*.tar.gz && \
         mv osa11 osa; \
-    fi 
+    fi && \
+    wget -q https://www.isdc.unige.ch/integral/download/osa/sw/10.2/osa10.2-bin-linux64.tar.gz && \
+    tar xzf osa10.2-bin-linux64.tar.gz && \
+    rm -fv osa10.2-bin-linux64.tar.gz
 
 ARG isdc_ref_cat_version=42.0
 
@@ -150,4 +150,4 @@ ADD tests /tests
 
 RUN source /init.sh; pip install jupyterlab
 
-ENTRYPOINT 'export HOME_OVERRRIDE=/home/jovyan; cd /home/jovyan; source /init.sh; jupyter lab --ip 0.0.0.0 --no-browser'
+ENTRYPOINT bash -c 'export HOME_OVERRRIDE=/home/jovyan; cd /home/jovyan; source /init.sh; jupyter lab --ip 0.0.0.0 --no-browser'
