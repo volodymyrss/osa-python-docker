@@ -41,7 +41,7 @@ RUN cd /opt/ && \
     tar xzf osa10.2-bin-linux64.tar.gz && \
     rm -fv osa10.2-bin-linux64.tar.gz
 
-ARG isdc_ref_cat_version=42.0
+ARG isdc_ref_cat_version=43.0
 
 RUN wget -q https://www.isdc.unige.ch/integral/download/osa/cat/osa_cat-${isdc_ref_cat_version}.tar.gz && \
     tar xvzf osa_cat-${isdc_ref_cat_version}.tar.gz && \
@@ -75,7 +75,7 @@ RUN echo 'source /etc/pyenvrc' >> /init.sh
 
 RUN yum install -y wcslib-devel swig
 
-ARG heasoft_version=6.27.1
+ARG heasoft_version=6.27.2
 
 ADD build-heasoft.sh /build-heasoft.sh
 
