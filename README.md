@@ -1,4 +1,4 @@
-# OSA with Python
+# INTEGRAL OSA including Python and HEASoft (with pyXSpec)
 
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/integralsw/osa-python.svg)](https://hub.docker.com/repository/docker/integralsw/osa-python/)
