@@ -42,8 +42,8 @@ https://github.com/cdcihub/oda_api_benchmark/
 
 # Consideration of Reproducibility
 
-An interactive workflows in environment can be sticktly repeatable, since they depend on the human input. What consituties input may vary. In this image, we consider cloning repositories with well-defined and tracked notebooks to be user input. Hence, the fact that notebooks are not in the image does not make the workflows relying on it less reproducibly.
+Interactive workflows (even in repeatable/reproducible environment) can not be sticktly repeatable/reproducible, since they depend on the human input. What consituties input may vary. In this image, we consider cloning repositories with well-defined and tracked notebooks to be user input. Hence, the fact that notebooks are not in the image does not make the workflows relying on it less reproducibly.
 
-For notes on reproducibility, repeatablility, and reusablity see: 
+For notes on differences between reproducibility, repeatablility, and reusablity consider: 
 
 https://github.com/volodymyrss/reproducibility-motivation
