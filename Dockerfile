@@ -25,8 +25,8 @@ RUN ln -s /usr/lib64/libpcre.so.1 /usr/lib64/libpcre.so.0
 
 # OSA 
 
-ARG OSA_VERSION=11.1-3-g87cee807-20200410-144247 
-ARG OSA_PLATFORM=CentOS_7.7.1908_x86_64
+ARG OSA_VERSION=11.1-16-g88c002b7-20210507-170349
+ARG OSA_PLATFORM=CentOS_7.8.2003_x86_64
 
 RUN cd /opt/ && \
     if [ ${OSA_VERSION} == "10.2" ]; then \
@@ -75,7 +75,7 @@ RUN echo 'source /etc/pyenvrc' >> /init.sh
 
 RUN yum install -y wcslib-devel swig
 
-ARG heasoft_version=6.27.2
+ARG heasoft_version=6.28
 
 ADD build-heasoft.sh /build-heasoft.sh
 
