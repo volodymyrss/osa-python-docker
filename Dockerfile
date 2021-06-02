@@ -66,7 +66,8 @@ RUN git clone git://github.com/yyuu/pyenv.git /pyenv
 ARG python_version=3.8.2
 
 RUN echo 'export PYENV_ROOT=/pyenv; export PATH="/pyenv/bin:$PATH"' >> /etc/pyenvrc && \
-    echo 'eval "$(pyenv init -)"' >> /etc/pyenvrc
+    echo 'eval "$(pyenv init --path)"' >> /etc/pyenvrc
+
 
 RUN source /etc/pyenvrc && which pyenv && PYTHON_CONFIGURE_OPTS="--enable-shared"  CFLAGS="-fPIC" CXXFLAGS="-fPIC" pyenv install $python_version && pyenv versions
 RUN source /etc/pyenvrc && pyenv shell $python_version && pyenv global $python_version && pyenv versions && pyenv rehash
