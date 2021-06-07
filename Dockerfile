@@ -65,8 +65,12 @@ RUN git clone git://github.com/yyuu/pyenv.git /pyenv
 
 ARG python_version=3.8.2
 
-RUN echo 'export PYENV_ROOT=/pyenv; export PATH="/pyenv/bin:$PATH"' >> /etc/pyenvrc && \
-    echo 'eval "$(pyenv init --path)"' >> /etc/pyenvrc
+RUN echo 'export PYENV_ROOT="/pyenv"' >> /etc/pyenvrc && \
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> /etc/pyenvrc && \
+    echo 'eval "$(pyenv init --path)"' >> /etc/pyenvrc && \
+    echo 'eval "$(pyenv init -)"' >> /etc/pyenvrc
+
+#RUN source /etc/pyenvrc && which pyenv && pyenv init
 
 
 RUN source /etc/pyenvrc && which pyenv && PYTHON_CONFIGURE_OPTS="--enable-shared"  CFLAGS="-fPIC" CXXFLAGS="-fPIC" pyenv install $python_version && pyenv versions
@@ -85,8 +89,7 @@ RUN echo '. /opt/rh/devtoolset-7/enable' >> /init.sh
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     rm -rf /opt/heasoft && \
-    bash build-heasoft.sh download && \
-    bash build-heasoft.sh build
+    bash build-heasoft.sh download
     
     
 RUN p=$(ls -d /opt/heasoft/x86*/); echo "found HEADAS: $p"; echo 'export HEADAS="'$p'"; source $HEADAS/headas-init.sh' >> /init.sh
