@@ -139,6 +139,10 @@ RUN git clone https://github.com/threeML/astromodels.git && \
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
+    pip install llvmlite --ignore-installed
+
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
     python -c 'import astromodels; print(astromodels.__file__)' 
 
 
