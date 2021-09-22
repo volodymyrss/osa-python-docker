@@ -128,22 +128,25 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 
 ADD activate.sh /activate.sh
 
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install pip --ignore-installed --upgrade 
 
 # 3ml
 
-RUN git clone https://github.com/threeML/astromodels.git && \
-    export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    ls -lotr && \
-    cd /astromodels/ && python setup.py install && pip install .
+#RUN git clone https://github.com/threeML/astromodels.git && \
+#    export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    ls -lotr && \
+#    cd /astromodels/ && python setup.py install && pip install .
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
-    pip install llvmlite --ignore-installed
+    pip install llvmlite --ignore-installed --upgrade
 
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    python -c 'import astromodels; print(astromodels.__file__)' 
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    python -c 'import astromodels; print(astromodels.__file__)' 
 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
