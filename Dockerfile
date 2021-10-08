@@ -105,12 +105,14 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 
 
 
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    python -c 'import xspec; print(xspec.__file__)' && \
+#    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
-    python -c 'import xspec; print(xspec.__file__)' && \
     pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
-
 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
