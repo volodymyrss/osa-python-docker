@@ -49,7 +49,7 @@ RUN wget -q https://www.isdc.unige.ch/integral/download/osa/cat/osa_cat-${isdc_r
     mv osa_cat-${isdc_ref_cat_version}/cat /data/ && \
     rm -rf osa_cat-${isdc_ref_cat_version}
 
-RUN wget -q http://ds9.si.edu/download/centos7/ds9.centos7.8.2.1.tar.gz && \
+RUN wget -q https://ds9.si.edu/download/centos7/ds9.centos7.8.5.tar.gz && \
     tar xvfz ds9.centos*.tar.gz && \
     chmod a+x ds9 && \
     mv ds9 /usr/local/bin && \
@@ -61,7 +61,7 @@ ADD init.sh /init.sh
 
 # python
 
-RUN git clone git://github.com/yyuu/pyenv.git /pyenv
+RUN git clone https://github.com/yyuu/pyenv.git /pyenv
 
 ARG python_version=3.10.11
 
