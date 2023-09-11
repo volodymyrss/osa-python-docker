@@ -25,7 +25,7 @@ RUN ln -s /usr/lib64/libpcre.so.1 /usr/lib64/libpcre.so.0
 
 # OSA 
 
-ARG OSA_VERSION=11.1-16-g88c002b7-20210507-170349
+ARG OSA_VERSION=11.2-20220322-170352
 ARG OSA_PLATFORM=CentOS_7.8.2003_x86_64
 
 RUN cd /opt/ && \
@@ -63,7 +63,7 @@ ADD init.sh /init.sh
 
 RUN git clone git://github.com/yyuu/pyenv.git /pyenv
 
-ARG python_version=3.8.2
+ARG python_version=3.10.11
 
 RUN echo 'export PYENV_ROOT="/pyenv"' >> /etc/pyenvrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> /etc/pyenvrc && \
