@@ -80,6 +80,16 @@ RUN echo 'source /etc/pyenvrc' >> /init.sh
 
 RUN yum install -y wcslib-devel swig
 
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    python -c 'import xspec; print(xspec.__file__)' && \
+#    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
+
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
+
+
 ARG heasoft_version=6.28
 
 ADD build-heasoft.sh /build-heasoft.sh
@@ -104,15 +114,6 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     hmake install
 
 
-
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    python -c 'import xspec; print(xspec.__file__)' && \
-#    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
-
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
