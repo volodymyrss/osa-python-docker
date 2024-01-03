@@ -82,8 +82,10 @@ date
 echo "Copy Xspec files for local models"
 cd $build_dir/heasoft-${heasoft_version}
 
-cp -p Xspec/BUILD_DIR/hmakerc ${install_prefix}/bin/ 
-cp -p Xspec/BUILD_DIR/Makefile-std ${install_prefix}/bin/
+HEADAS=`ls -dA $install_prefix/x*`
+
+cp -p Xspec/BUILD_DIR/hmakerc $HEADAS/bin/ 
+cp -p Xspec/BUILD_DIR/Makefile-std $HEADAS/bin/
 rm -rf Xspec/src/spectral 
 
 cd $build_dir

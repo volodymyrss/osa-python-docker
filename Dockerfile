@@ -121,6 +121,12 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     rm -rf /opt/heasoft && \
     bash build-heasoft.sh download
 
+#ADD clean-heasoft.sh /clean-heasoft.sh
+
+#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+#    source /init.sh && \
+#    bash clean-heasoft.sh download
+
 RUN p=$(ls -d /opt/heasoft/x86*/); echo "found HEADAS: $p"; echo 'export HEADAS="'$p'"; source $HEADAS/headas-init.sh' >> /init.sh
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
@@ -132,9 +138,13 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     cd /heasoft-heasp && \
     hmake install
 
+#pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/py3/requirements.txt && \
+#Removed healpy version from requirements
+ADD data-analysis-requirements.txt /tmp/data-analysis-requirements.txt
+
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
-    pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/py3/requirements.txt && \
+    pip install -r /tmp/data-analysis-requirements.txt && \
     pip install git+https://github.com/volodymyrss/data-analysis@py3 && \
     pip install git+https://github.com/volodymyrss/pilton && \
     pip install git+https://github.com/volodymyrss/dda-ddosa
