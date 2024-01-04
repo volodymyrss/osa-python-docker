@@ -8,7 +8,7 @@ RUN yum -y install gcc gcc-c++ gcc-gfortran \
                    patch libjpeg libpng12 libX11 \
                    which libXpm libXext curlftpfs wget libgfortran file \
                    ruby-devel fpm rpm-build \
-		   openssl-devel openssl11-devel openssl11-lib \
+		        openssl-devel openssl11-devel openssl11-lib \
                    ncurses-devel \
                    libXt-devel libX11-devel libXpm-devel libXft-devel libXext-devel \
                    cmake pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel \
