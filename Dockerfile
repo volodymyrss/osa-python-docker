@@ -124,11 +124,6 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     cd /heasoft-heasp && \
     hmake install
 
-#pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/master/requirements.txt && \
-#Removed healpy version from requirements
-#ADD data-analysis-requirements.txt /tmp/data-analysis-requirements.txt
-#    pip install -r /tmp/data-analysis-requirements.txt && \
-
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     pip install git+https://github.com/volodymyrss/data-analysis && \
