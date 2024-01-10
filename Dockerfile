@@ -3,21 +3,37 @@ FROM centos:7
 RUN yum -y install epel-release
 RUN yum -y update
 RUN yum -y install gcc gcc-c++ gcc-gfortran \
-                   git curl make zlib-devel bzip2 bzip2-devel \
-                   readline-devel sqlite sqlite-devel openssl \
-                   openssl-devel patch libjpeg libpng12 libX11 \
-                   which libXpm libXext curlftpfs wget libgfortran file \
-                   ruby-devel fpm rpm-build \
-                   ncurses-devel \
-                   libXt-devel libX11-devel libXpm-devel libXft-devel libXext-devel \
-                   cmake openssl-devel pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel \
-                   mysql-devel fftw-devel cfitsio-devel graphviz-devel avahi-compat-libdns_sd-devel libldap-dev python-devel libxml2-devel gsl-static gsl-devel\
-                   compat-gcc-44 compat-gcc-44-c++ compat-gcc-44-c++.gfortran \
-                   perl-ExtUtils-MakeMaker \
-                   net-tools strace sshfs sudo iptables \
-                   libyaml-devel  \
-                   gcc gcc-c++ make git patch openssl-devel zlib-devel readline-devel sqlite-devel bzip2-devel libffi-devel zlib python36u-tkinter.x86_64 
+		git curl make zlib-devel bzip2 bzip2-devel \
+		readline-devel sqlite sqlite-devel \
+		patch libjpeg libpng12 libX11 \
+		which libXpm libXext curlftpfs wget libgfortran file \
+		ruby-devel fpm rpm-build \
+		openssl-devel openssl11-devel openssl11-lib \
+		ncurses-devel \
+		libXt-devel libX11-devel libXpm-devel libXft-devel libXext-devel \
+		cmake pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel \
+		mysql-devel fftw-devel cfitsio-devel graphviz-devel avahi-compat-libdns_sd-devel libldap-dev python-devel libxml2-devel gsl-static gsl-devel\
+		compat-gcc-44 compat-gcc-44-c++ compat-gcc-44-c++.gfortran \
+		perl-ExtUtils-MakeMaker \
+		net-tools strace sshfs sudo iptables \
+		libyaml-devel  \
+		git patch zlib-devel readline-devel sqlite-devel bzip2-devel libffi-devel zlib python36u-tkinter.x86_64 \
+		wcslib-devel swig \
+		libcurl4 \
+		libcurl4-gnutls-dev \
+		libncurses5-dev \
+		libreadline6-dev \
+		make \
+		ncurses-dev \
+		perl-modules \
+		python3-dev \
+		python3-pip \
+		python3-setuptools \
+		python-is-python3 \
+		wget \
+		xorg-dev 
 
+        
 RUN yum install -y centos-release-scl
 RUN yum install -y devtoolset-7*
 
@@ -57,8 +73,6 @@ RUN wget -q https://ds9.si.edu/download/centos7/ds9.centos7.8.5.tar.gz && \
 
 ADD init.sh /init.sh
 
-
-
 # python
 
 RUN git clone https://github.com/yyuu/pyenv.git /pyenv
@@ -70,15 +84,19 @@ RUN echo 'export PYENV_ROOT="/pyenv"' >> /etc/pyenvrc && \
     echo 'eval "$(pyenv init --path)"' >> /etc/pyenvrc && \
     echo 'eval "$(pyenv init -)"' >> /etc/pyenvrc
 
-#RUN source /etc/pyenvrc && which pyenv && pyenv init
 
-
-RUN source /etc/pyenvrc && which pyenv && PYTHON_CONFIGURE_OPTS="--enable-shared"  CFLAGS="-fPIC" CXXFLAGS="-fPIC" pyenv install $python_version && pyenv versions
+RUN source /etc/pyenvrc && which pyenv && PYTHON_CONFIGURE_OPTS="--enable-shared"  CFLAGS="-fPIC -I/usr/include/openssl11" CXXFLAGS="-fPIC -I/usr/include/openssl11" LDFLAGS="-L/usr/lib64/openssl11 -lssl -lcrypto" pyenv install $python_version && pyenv versions
 RUN source /etc/pyenvrc && pyenv shell $python_version && pyenv global $python_version && pyenv versions && pyenv rehash
 
 RUN echo 'source /etc/pyenvrc' >> /init.sh
 
-RUN yum install -y wcslib-devel swig
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && pip install pip --upgrade
+
+# Needed for pyxspec
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install numpy scipy ipython jupyter matplotlib pandas astropy 
 
 ARG heasoft_version=6.28
 
@@ -90,9 +108,12 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     rm -rf /opt/heasoft && \
     bash build-heasoft.sh download
-    
-    
+
 RUN p=$(ls -d /opt/heasoft/x86*/); echo "found HEADAS: $p"; echo 'export HEADAS="'$p'"; source $HEADAS/headas-init.sh' >> /init.sh
+
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    python -c 'import xspec; print(xspec.__file__)' 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
@@ -103,28 +124,11 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     cd /heasoft-heasp && \
     hmake install
 
-
-
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    python -c 'import xspec; print(xspec.__file__)' && \
-#    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
-
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
-    pip install numpy scipy ipython jupyter matplotlib pandas astropy==2.0.11
-
-
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
-    pip install -r https://raw.githubusercontent.com/volodymyrss/data-analysis/py3/requirements.txt && \
-    pip install git+https://github.com/volodymyrss/data-analysis@py3 && \
+    pip install git+https://github.com/volodymyrss/data-analysis && \
     pip install git+https://github.com/volodymyrss/pilton && \
-    pip install git+https://github.com/volodymyrss/dda-ddosa
-
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-    source /init.sh && \
+    pip install git+https://github.com/volodymyrss/dda-ddosa \
     pip install git+https://github.com/volodymyrss/dqueue.git
 
 
@@ -134,22 +138,28 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     pip install pip --ignore-installed --upgrade 
 
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip install pygsl --ignore-installed --upgrade
 # 3ml
 
-#RUN git clone https://github.com/threeML/astromodels.git && \
-#    export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    ls -lotr && \
-#    cd /astromodels/ && python setup.py install && pip install .
+RUN git clone https://github.com/ferrigno/astromodels.git && \
+    export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    ls -lotr && \
+    pip install "packaging<22.0,>=21.3" tempita && \
+    cd /astromodels/ && python setup.py install && pip install .
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     pip install llvmlite --ignore-installed --upgrade
 
-#RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
-#    source /init.sh && \
-#    python -c 'import astromodels; print(astromodels.__file__)' 
-
+RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
+    source /init.sh && \
+    pip freeze | grep numba && \
+    pip uninstall -y numba && \
+    pip install numba --ignore-installed --upgrade && \
+    python -c 'import astromodels; print(astromodels.__file__)' 
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \

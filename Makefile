@@ -13,12 +13,14 @@ IMAGE_BASE?=integralsw/osa-python
 IMAGE?=$(IMAGE_BASE):$(IMAGE_TAG)
 IMAGE_LATEST?=$(IMAGE_BASE):latest
 
+DUSER := $(shell id -u)
+
 push: build
 	docker push $(IMAGE) 
 	docker push $(IMAGE_LATEST) 
 
 build: Dockerfile
-	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=$(PYTHON_VERSION) --build-arg heasoft_version=$(HEASOFT_VERSION) . -t $(IMAGE) 
+	docker build --progress plain --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=$(PYTHON_VERSION) --build-arg heasoft_version=$(HEASOFT_VERSION) . -t $(IMAGE) 
 	docker build --build-arg OSA_VERSION=$(OSA_VERSION) --build-arg python_version=$(PYTHON_VERSION) --build-arg heasoft_version=$(HEASOFT_VERSION) . -t $(IMAGE_LATEST)
 
 squash:
@@ -34,7 +36,7 @@ pull:
 #	j2 -e 'OSA_VERSION="$(OSA_IMAGE_TAG)"' Dockerfile.j2 -d -o Dockerfile
 
 jupyter: build
-	docker run --user $(id -u) $(IMAGE) bash -c 'export HOME_OVERRRIDE=/tmp; source /init.sh; jupyter notebook --ip 0.0.0.0 --no-browser'
+	docker run -e DISPLAY=${DISPLAY} -v $(PWD):/home/jovyan -v /etc/passwd:/etc/passwd -it --entrypoint='' -v /tmp/.X11-unix:/tmp/.X11-unix -v ${HOME}/.Xauthority:/home/jovyan/.Xauthority:rw --net=host --user $(DUSER) $(IMAGE) bash -c 'export HOME_OVERRRIDE=/tmp; source /init.sh; jupyter notebook --ip 0.0.0.0 --no-browser --port=1234'
 
 test:
 	docker run --user $(shell id -u) $(IMAGE) bash -c 'cd /tests; ls -ltor; make'

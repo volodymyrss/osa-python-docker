@@ -15,7 +15,7 @@ export heasoft_version=${heasoft_version:-6.27.2}
 export install_prefix=/opt/heasoft/
 export dist_prefix=/dist/heasoft/
 
-export mirror_url="https://www.isdc.unige.ch/~savchenk/heasoft-${heasoft_version}src_no_xspec_modeldata.tar.gz"
+export mirror_url="https://www.isdc.unige.ch/~ferrigno/Downloads/heasoft-${heasoft_version}src_no_xspec_modeldata.tar.gz"
 export url="https://heasarc.gsfc.nasa.gov/FTP/software/lheasoft/lheasoft${heasoft_version}/heasoft-${heasoft_version}src_no_xspec_modeldata.tar.gz"
 
 export gzFile=`basename $url`
@@ -55,41 +55,46 @@ export F90=gfortran
 export FC=gfortran
 
 
-export CXXFLAGS="-fPIC"
-export CFLAGS="-fPIC"
+export CXXFLAGS="-fPIC -pthread -ldl"
+export CFLAGS="-fPIC -pthread"
 export LDFLAGS="-fPIC"
 
 echo "Configuring... (message saved in log_configure)"
 date
-./configure --prefix=${install_prefix}  > /dev/null 2>&1
+./configure --prefix=${install_prefix}  2>&1 | tee ${HOME}/configure.log #> /dev/null 2>&1
 date
 
 
 ## centos5 does not compile otherwise, weird
-
 export PATH=/heasoft/x86_64-unknown-linux-gnu-libc2.5/bin:$PATH
 
 ##
-export CXXFLAGS="-fPIC"
-export CFLAGS="-fPIC"
-export LDFLAGS="-fPIC"
-
 echo "Executing make..."
 date
-make > /dev/null 2>&1
+make 2>&1 | tee ${HOME}/build.log #> /dev/null 2>&1
 date
 
 echo "Executing make install..."
 date
-make install > /dev/null 2>&1
+make install 2>&1 | tee ${HOME}/install.log #> /dev/null 2>&1
 date
 
-cd $HOME
+echo "Copy Xspec files for local models"
+cd $build_dir/heasoft-${heasoft_version}
+
+HEADAS=`ls -dA $install_prefix/x*`
+
+cp -p Xspec/BUILD_DIR/hmakerc $HEADAS/bin/ 
+cp -p Xspec/BUILD_DIR/Makefile-std $HEADAS/bin/
+rm -rf Xspec/src/spectral 
+
+cd $build_dir
 
 echo "Cleaning up.."
-rm -rf heasoft-${heasoft_version}/ 
+rm -rf $build_dir/heasoft-${heasoft_version}/ 
 rm -fv *gz
 
 find $install_prefix/heasoft -size +5M | grep ref | xargs rm -fv
 
+cd ${HOME}
 rm -rf $build_dir

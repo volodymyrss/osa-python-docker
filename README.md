@@ -22,9 +22,9 @@ $ make run
 
 ## Image Contents
 
-* A latest Python version, currently 3.8.5.
-* HEASoft, usually the latest version.
+* A latest Python version, currently 3.10.11.
 * OSA
+* HEASoft, usually the latest version. Note that some OSA tools related to response matrix rebinning for ISGRI and JEM-X as well as standard ISGRI and JEM-X pipelines are not compatible with HEASoft versions newer than 6.28.
 
 ## What is not inside:
 
