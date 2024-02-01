@@ -71,7 +71,7 @@ RUN wget -q https://ds9.si.edu/download/centos7/ds9.centos7.8.5.tar.gz && \
     mv ds9 /usr/local/bin && \
     rm -f ds9.centos*.tar.gz
 
-ADD init.sh /init.sh
+COPY init.sh /init.sh
 
 # python
 
@@ -100,7 +100,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
 
 ARG heasoft_version=6.28
 
-ADD build-heasoft.sh /build-heasoft.sh
+COPY build-heasoft.sh /build-heasoft.sh
 
 RUN echo '. /opt/rh/devtoolset-7/enable' >> /init.sh
     
@@ -132,7 +132,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     pip install git+https://github.com/volodymyrss/dqueue.git
 
 
-ADD activate.sh /activate.sh
+COPY activate.sh /activate.sh
 
 RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
@@ -169,7 +169,7 @@ RUN export HOME_OVERRRIDE=/tmp/home && mkdir -pv /tmp/home/pfiles && \
     source /init.sh && \
     pip install pymysql peewee
 
-ADD tests /tests
+COPY tests /tests
 
 RUN source /init.sh; pip install jupyterlab
 
